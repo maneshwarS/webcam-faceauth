@@ -1,0 +1,251 @@
+.container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 1rem;
+}
+
+/* ── Video wrapper with sci-fi scanner effects ── */
+.videoWrapper {
+  position: relative;
+  border-radius: 16px;
+  overflow: hidden;
+  background: #0a0a14;
+  box-shadow: 0 4px 24px rgba(0, 0, 0, 0.4);
+  border: 2px solid rgba(255, 255, 255, 0.1);
+  transition: border-color 0.4s, box-shadow 0.4s;
+}
+
+/* Scanning laser line — sweeps top to bottom */
+.videoWrapper::before {
+  content: '';
+  position: absolute;
+  left: 0;
+  width: 100%;
+  height: 2px;
+  background: linear-gradient(90deg, transparent, #00e5ff, transparent);
+  box-shadow: 0 0 15px rgba(0, 229, 255, 0.5), 0 0 30px rgba(0, 229, 255, 0.3);
+  z-index: 10;
+  animation: scanLine 2.5s ease-in-out infinite;
+  pointer-events: none;
+}
+
+/* Pulsing corner brackets */
+.videoWrapper::after {
+  content: '';
+  position: absolute;
+  inset: 6px;
+  border: 2px solid #00e5ff;
+  border-radius: 2px;
+  z-index: 10;
+  pointer-events: none;
+  animation: cornerPulse 2s ease-in-out infinite;
+  -webkit-mask-image:
+    linear-gradient(#fff, #fff),
+    linear-gradient(#fff, #fff),
+    linear-gradient(#fff, #fff),
+    linear-gradient(#fff, #fff);
+  -webkit-mask-size: 30px 30px;
+  -webkit-mask-repeat: no-repeat;
+  -webkit-mask-position: top left, top right, bottom left, bottom right;
+  -webkit-mask-composite: source-over;
+  mask-image:
+    linear-gradient(#fff, #fff),
+    linear-gradient(#fff, #fff),
+    linear-gradient(#fff, #fff),
+    linear-gradient(#fff, #fff);
+  mask-size: 30px 30px;
+  mask-repeat: no-repeat;
+  mask-position: top left, top right, bottom left, bottom right;
+  mask-composite: add;
+}
+
+/* State-specific border glow */
+.videoWrapperNone    { border-color: rgba(255, 255, 255, 0.1); }
+.videoWrapperFound   { border-color: #ffd740; box-shadow: 0 0 20px rgba(255, 215, 64, 0.2), 0 0 40px rgba(255, 215, 64, 0.1); }
+.videoWrapperQuality { border-color: #00e5ff; box-shadow: 0 0 25px rgba(0, 229, 255, 0.3), 0 0 50px rgba(0, 229, 255, 0.15); animation: glowPulse 2s ease-in-out infinite; }
+.videoWrapperDone    { border-color: #69f0ae; box-shadow: 0 0 25px rgba(105, 240, 174, 0.3), 0 0 50px rgba(105, 240, 174, 0.15); }
+
+.video {
+  display: block;
+  width: 480px;
+  max-width: 100%;
+  height: auto;
+  transform: scaleX(-1);
+}
+
+.canvas {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+  transform: scaleX(-1);
+}
+
+/* ── Progress panel (glassmorphism) ── */
+.progressPanel {
+  width: 480px;
+  max-width: 100%;
+  background: rgba(255, 255, 255, 0.04);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 14px;
+  padding: 0.85rem 1.1rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.55rem;
+  animation: fadeInUp 0.3s ease;
+}
+
+.progressRow {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  font-size: 0.82rem;
+}
+
+.progressLabel {
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+  color: #9090a8;
+  font-weight: 500;
+}
+
+.progressValue {
+  color: #d0d0e0;
+  font-weight: 600;
+  font-variant-numeric: tabular-nums;
+}
+
+.bar {
+  height: 6px;
+  background: rgba(255, 255, 255, 0.06);
+  border-radius: 3px;
+  overflow: hidden;
+}
+
+.barFill {
+  height: 100%;
+  border-radius: 3px;
+  transition: width 0.2s ease, background 0.3s;
+  box-shadow: 0 0 8px currentColor;
+}
+
+/* Status pills */
+.statusPill {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  padding: 0.3rem 0.75rem;
+  border-radius: 20px;
+  font-size: 0.82rem;
+  font-weight: 600;
+  width: 100%;
+  justify-content: center;
+}
+
+.pillNone     { background: rgba(255, 255, 255, 0.04); color: #9090a8; }
+.pillFound    { background: rgba(255, 215, 64, 0.08); color: #ffd740; }
+.pillQuality  { background: rgba(0, 229, 255, 0.08); color: #00e5ff; }
+.pillLiveness { background: rgba(224, 64, 251, 0.08); color: #e040fb; }
+.pillDone     { background: rgba(105, 240, 174, 0.08); color: #69f0ae; }
+.pillError    { background: rgba(255, 82, 82, 0.08); color: #ff8a80; }
+
+/* Quality frame dots */
+.frameDots {
+  display: flex;
+  gap: 6px;
+  align-items: center;
+}
+
+.frameDot {
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  border: 2px solid rgba(255, 255, 255, 0.15);
+  transition: all 0.2s;
+}
+
+.frameDotFilled {
+  background: #00e5ff;
+  border-color: #00e5ff;
+  box-shadow: 0 0 6px rgba(0, 229, 255, 0.4);
+}
+
+.frameDotActive {
+  background: #ffd740;
+  border-color: #ffd740;
+  box-shadow: 0 0 8px rgba(255, 215, 64, 0.5);
+  animation: pulse 0.6s infinite;
+}
+
+.dot {
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  flex-shrink: 0;
+}
+.dotNone     { background: #606080; }
+.dotFound    { background: #ffd740; animation: pulse 1s infinite; }
+.dotQuality  { background: #00e5ff; animation: pulse 0.7s infinite; }
+.dotLiveness { background: #e040fb; animation: pulse 1s infinite; }
+.dotDone     { background: #69f0ae; }
+.dotError    { background: #ff8a80; }
+
+@keyframes pulse {
+  0%, 100% { opacity: 1; transform: scale(1); }
+  50% { opacity: 0.4; transform: scale(0.8); }
+}
+
+/* ── Loading / Success placeholder ── */
+.loadingSpinner {
+  width: 480px;
+  max-width: 100%;
+  height: 360px;
+  background: rgba(255, 255, 255, 0.03);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border: 1px solid rgba(255, 255, 255, 0.06);
+  border-radius: 16px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  color: #9090a8;
+  gap: 1rem;
+  animation: fadeInUp 0.4s ease;
+}
+
+.spinner {
+  width: 36px;
+  height: 36px;
+  border: 3px solid rgba(255, 255, 255, 0.1);
+  border-top-color: #00e5ff;
+  border-radius: 50%;
+  animation: spin 0.8s linear infinite;
+  box-shadow: 0 0 12px rgba(0, 229, 255, 0.3);
+}
+
+@keyframes spin {
+  to { transform: rotate(360deg); }
+}
+
+.errorBox {
+  width: 480px;
+  max-width: 100%;
+  padding: 1.5rem;
+  background: rgba(255, 82, 82, 0.06);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border: 1px solid rgba(255, 82, 82, 0.15);
+  border-radius: 16px;
+  color: #ff8a80;
+  text-align: center;
+  font-size: 0.9rem;
+  line-height: 1.5;
+  animation: fadeInUp 0.3s ease;
+}

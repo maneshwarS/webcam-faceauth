@@ -1,0 +1,9 @@
+node_modules/
+backend/db/faceid.db
+backend/.env
+frontend/dist/
+.DS_Store
+*.log
+.claude/
+backend/db/faceid.db-shm
+backend/db/faceid.db-wal

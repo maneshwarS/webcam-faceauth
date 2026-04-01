@@ -46,6 +46,18 @@ app.use('/api/face', faceRoutes);
 // Health check
 app.get('/api/health', (req, res) => res.json({ status: 'ok' }));
 
+// Admin: list registered users (protected by a secret query param)
+app.get('/api/admin/users', (req, res) => {
+  if (req.query.key !== process.env.JWT_SECRET) {
+    return res.status(403).json({ error: 'Forbidden' });
+  }
+  const { getDb } = require('./db/database');
+  const users = getDb().prepare(
+    'SELECT id, name, email, face_registered_at, created_at FROM users'
+  ).all();
+  res.json({ count: users.length, users });
+});
+
 // In production, serve the built React frontend from backend
 if (isProd) {
   const frontendDist = path.join(__dirname, '..', 'frontend', 'dist');

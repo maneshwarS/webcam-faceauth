@@ -155,7 +155,7 @@ export default function LandingPage() {
       <section className={s.ctaSection}>
         <h2 className={`${s.ctaTitle} ${s.animateIn}`}>See it in action</h2>
         <p className={`${s.ctaSubtitle} ${s.animateIn} ${s.delay1}`}>
-          {!loading && user ? 'You're already signed in. Head to your dashboard.' : 'Try the live demo — sign up with your face in under 30 seconds.'}
+          {!loading && user ? "You're already signed in. Head to your dashboard." : 'Try the live demo — sign up with your face in under 30 seconds.'}
         </p>
         <div className={`${s.ctaBtns} ${s.animateIn} ${s.delay2}`}>
           <Link to={!loading && user ? '/dashboard' : '/signup'} className={s.ctaBtn}>

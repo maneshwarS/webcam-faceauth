@@ -1,10 +1,7 @@
 import { Link } from 'react-router-dom';
-import { useAuth } from '../hooks/useAuth';
 import s from './LandingPage.module.css';
 
 export default function LandingPage() {
-  const { user, loading } = useAuth();
-
   return (
     <div className={s.page}>
       {/* Nav */}
@@ -14,7 +11,7 @@ export default function LandingPage() {
           <li><a href="#how">How It Works</a></li>
           <li><a href="#features">Features</a></li>
           <li><a href="#stack">Stack</a></li>
-          <li>{!loading && user ? <Link to="/dashboard">Dashboard</Link> : <Link to="/signup">Try It</Link>}</li>
+          <li><Link to="/signup">Try It</Link></li>
         </ul>
       </nav>
 
@@ -49,15 +46,9 @@ export default function LandingPage() {
 
           <div className={`${s.heroSocials} ${s.animateIn} ${s.delay2}`}>
             <a href="https://github.com/maneshwarS/webcam-faceauth" className={s.socialLink} target="_blank" rel="noreferrer">GitHub</a>
-            {!loading && user ? (
-              <Link to="/dashboard" className={s.socialLink}>Dashboard</Link>
-            ) : (
-              <>
-                <Link to="/signup" className={s.socialLink}>Sign Up</Link>
-                <Link to="/signin" className={s.socialLink}>Sign In</Link>
-                <Link to="/face-login" className={s.socialLink}>Face Login</Link>
-              </>
-            )}
+            <Link to="/signup" className={s.socialLink}>Sign Up</Link>
+            <Link to="/signin" className={s.socialLink}>Sign In</Link>
+            <Link to="/face-login" className={s.socialLink}>Face Login</Link>
           </div>
         </div>
       </section>
@@ -128,7 +119,7 @@ export default function LandingPage() {
               ['Face-Only Login', 'Skip the password entirely. Server matches your face against all registered users via 128-D Euclidean distance.'],
               ['Secure Token Architecture', 'Access tokens in memory only (never localStorage). Refresh tokens as httpOnly cookies with SHA-256 hashing in the DB.'],
               ['Atomic Signup', 'Credentials + face descriptor sent in a single POST. No partial user records if face capture fails mid-flow.'],
-            ].map(([name, desc], i) => (
+            ].map(([name, desc]) => (
               <div className={s.featureRow} key={name}>
                 <span className={s.featureName}>{name}</span>
                 <span className={s.featureDesc}>{desc}</span>
@@ -155,12 +146,10 @@ export default function LandingPage() {
       <section className={s.ctaSection}>
         <h2 className={`${s.ctaTitle} ${s.animateIn}`}>See it in action</h2>
         <p className={`${s.ctaSubtitle} ${s.animateIn} ${s.delay1}`}>
-          {!loading && user ? "You're already signed in. Head to your dashboard." : 'Try the live demo — sign up with your face in under 30 seconds.'}
+          Try the live demo — sign up with your face in under 30 seconds.
         </p>
         <div className={`${s.ctaBtns} ${s.animateIn} ${s.delay2}`}>
-          <Link to={!loading && user ? '/dashboard' : '/signup'} className={s.ctaBtn}>
-            {!loading && user ? 'Go to Dashboard →' : 'Get Started →'}
-          </Link>
+          <Link to="/signup" className={s.ctaBtn}>Get Started →</Link>
           <a href="https://github.com/maneshwarS/webcam-faceauth" className={`${s.ctaBtn} ${s.ctaBtnOutline}`} target="_blank" rel="noreferrer">View Source</a>
         </div>
       </section>
@@ -170,14 +159,8 @@ export default function LandingPage() {
         <div className={s.footerText}>© 2026 FaceAuth <span className={s.dot} /> Built by Maneshwar Singh</div>
         <div className={s.footerLinks}>
           <a href="https://github.com/maneshwarS/webcam-faceauth" target="_blank" rel="noreferrer">GitHub</a>
-          {!loading && user ? (
-            <Link to="/dashboard">Dashboard</Link>
-          ) : (
-            <>
-              <Link to="/signin">Sign In</Link>
-              <Link to="/signup">Sign Up</Link>
-            </>
-          )}
+          <Link to="/signin">Sign In</Link>
+          <Link to="/signup">Sign Up</Link>
         </div>
       </footer>
     </div>

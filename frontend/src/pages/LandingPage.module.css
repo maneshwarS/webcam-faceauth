@@ -220,14 +220,14 @@
 .ctaBtns { display: flex; gap: 1rem; justify-content: center; flex-wrap: wrap; }
 .ctaBtn {
   display: inline-flex; align-items: center; gap: 0.5rem;
-  padding: 0.85rem 2rem; background: #fff; color: #000 !important;
+  padding: 0.85rem 2rem; background: #fff; color: #000;
   font-family: 'Inter', sans-serif; font-size: 0.875rem; font-weight: 600;
   border: none; border-radius: 999px; cursor: pointer;
   transition: transform 0.2s, box-shadow 0.2s; letter-spacing: -0.01em;
 }
 .ctaBtn:hover { transform: translateY(-1px); box-shadow: 0 0 30px rgba(255, 255, 255, 0.15); }
 .ctaBtnOutline {
-  background: transparent; color: #fff;
+  background: transparent; color: #fff !important;
   border: 1px solid rgba(255, 255, 255, 0.2);
 }
 .ctaBtnOutline:hover {

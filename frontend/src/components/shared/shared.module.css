@@ -10,7 +10,7 @@
   cursor: pointer;
   border: none;
   transition: all 0.25s ease;
-  min-height: 42px;
+  min-height: 44px;
   font-family: 'Inter', system-ui, sans-serif;
   letter-spacing: 0.01em;
 }
@@ -81,7 +81,7 @@
 }
 
 .label {
-  font-size: 0.85rem;
+  font-size: 0.875rem;
   color: #9090a8;
   font-weight: 500;
 }
@@ -107,7 +107,7 @@
 }
 
 .errorText {
-  font-size: 0.8rem;
+  font-size: 0.875rem;
   color: #ff8a80;
   animation: fadeInUp 0.2s ease;
 }
@@ -117,15 +117,17 @@
   display: flex;
   align-items: center;
   gap: 0.5rem;
-  font-size: 0.85rem;
+  font-size: 0.875rem;
   color: #9090a8;
   cursor: pointer;
+  min-height: 44px;
 }
 .checkboxRow input[type="checkbox"] {
-  width: 15px;
-  height: 15px;
+  width: 18px;
+  height: 18px;
   accent-color: #00e5ff;
   cursor: pointer;
+  flex-shrink: 0;
 }
 
 @keyframes spin {

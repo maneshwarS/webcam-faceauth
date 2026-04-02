@@ -30,7 +30,7 @@
 }
 
 .sub {
-  font-size: 0.8rem;
+  font-size: 0.875rem;
   color: #9090a8;
   margin: 0 0 1rem;
 }
@@ -47,4 +47,12 @@
   background: linear-gradient(90deg, #e040fb, #7c4dff);
   box-shadow: 0 0 8px rgba(224, 64, 251, 0.4);
   transition: width 1s linear;
+}
+
+/* ── Mobile adjustments ── */
+@media (max-width: 480px) {
+  .challengeBox {
+    padding: 1.25rem 1rem;
+    min-width: unset;
+  }
 }

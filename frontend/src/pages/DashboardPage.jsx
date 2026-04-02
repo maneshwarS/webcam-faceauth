@@ -29,14 +29,14 @@ export default function DashboardPage() {
   }
 
   return (
-    <div style={{ minHeight: '100vh', background: 'transparent', padding: '2rem', display: 'flex', justifyContent: 'center' }}>
+    <div style={{ minHeight: '100vh', background: 'transparent', padding: '1rem', display: 'flex', justifyContent: 'center' }}>
       <div style={{ maxWidth: '600px', width: '100%', display: 'flex', flexDirection: 'column', gap: '1.5rem' }}>
 
         {/* Header */}
-        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', animation: 'fadeInUp 0.4s ease' }}>
-          <div>
+        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', animation: 'fadeInUp 0.4s ease', flexWrap: 'wrap', gap: '0.75rem' }}>
+          <div style={{ minWidth: 0 }}>
             <h1 style={{ color: '#f0f0f5', margin: 0, fontSize: '1.5rem' }}>Dashboard</h1>
-            <p style={{ color: '#9090a8', margin: '0.25rem 0 0', fontSize: '0.85rem' }}>
+            <p style={{ color: '#9090a8', margin: '0.25rem 0 0', fontSize: '0.875rem', wordBreak: 'break-all' }}>
               Signed in as <strong style={{ color: '#d0d0e0' }}>{user?.email}</strong>
             </p>
           </div>
@@ -45,9 +45,9 @@ export default function DashboardPage() {
 
         {/* Welcome card */}
         <div className={styles.card} style={{ gap: '0.5rem' }}>
-          <p style={{ color: '#9090a8', fontSize: '0.85rem', margin: 0 }}>Welcome back</p>
+          <p style={{ color: '#9090a8', fontSize: '0.875rem', margin: 0 }}>Welcome back</p>
           <h2 style={{ color: '#f0f0f5', margin: 0, fontSize: '1.8rem' }}>{user?.name}</h2>
-          <p style={{ color: '#707090', margin: '0.5rem 0 0', fontSize: '0.85rem' }}>
+          <p style={{ color: '#707090', margin: '0.5rem 0 0', fontSize: '0.875rem' }}>
             You're securely authenticated with facial recognition enabled.
           </p>
         </div>
@@ -55,7 +55,7 @@ export default function DashboardPage() {
         {/* Face ID management */}
         <div className={styles.card}>
           <h3 style={{ color: '#d0d0e0', margin: '0 0 0.5rem', fontSize: '1rem' }}>Face ID</h3>
-          <p style={{ color: '#9090a8', fontSize: '0.85rem', margin: '0 0 1rem' }}>
+          <p style={{ color: '#9090a8', fontSize: '0.875rem', margin: '0 0 1rem' }}>
             Update your registered face if it's not recognizing you well (e.g., new glasses, lighting changes).
           </p>
           {faceUpdateMsg && (
@@ -85,7 +85,7 @@ export default function DashboardPage() {
         {/* Auth info */}
         <div className={styles.card}>
           <h3 style={{ color: '#d0d0e0', margin: '0 0 0.75rem', fontSize: '1rem' }}>Account info</h3>
-          <table style={{ width: '100%', borderCollapse: 'collapse', fontSize: '0.85rem' }}>
+          <table style={{ width: '100%', borderCollapse: 'collapse', fontSize: '0.875rem' }}>
             <tbody>
               {[
                 ['Name', user?.name],
@@ -93,8 +93,8 @@ export default function DashboardPage() {
                 ['User ID', `#${user?.id}`],
               ].map(([k, v]) => (
                 <tr key={k}>
-                  <td style={{ color: '#9090a8', padding: '0.4rem 0', width: '120px' }}>{k}</td>
-                  <td style={{ color: '#d0d0e0' }}>{v}</td>
+                  <td style={{ color: '#9090a8', padding: '0.4rem 0', whiteSpace: 'nowrap', paddingRight: '1rem' }}>{k}</td>
+                  <td style={{ color: '#d0d0e0', wordBreak: 'break-all' }}>{v}</td>
                 </tr>
               ))}
             </tbody>

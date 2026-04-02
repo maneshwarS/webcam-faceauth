@@ -86,7 +86,7 @@ export default function SignInPage() {
 
   if (step === STEP.FACE_2FA) {
     return (
-      <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', minHeight: '100vh', padding: '2rem' }}>
+      <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', minHeight: '100vh', padding: '1rem' }}>
         <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '1.5rem', maxWidth: '600px', width: '100%' }}>
           <div style={{ textAlign: 'center' }}>
             <h2 style={{ color: '#f0f0f5', margin: 0 }}>Face Verification</h2>
@@ -108,7 +108,7 @@ export default function SignInPage() {
   }
 
   return (
-    <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', minHeight: '100vh', padding: '2rem' }}>
+    <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', minHeight: '100vh', padding: '1rem' }}>
       <div className={styles.card}>
         <h1 className={styles.title}>Welcome back</h1>
         <p className={styles.subtitle}>Sign in with your email and password</p>

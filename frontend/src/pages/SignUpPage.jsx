@@ -83,7 +83,7 @@ export default function SignUpPage() {
 
   if (step === STEP.FACE) {
     return (
-      <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', minHeight: '100vh', padding: '2rem' }}>
+      <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', minHeight: '100vh', padding: '1rem' }}>
         <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '1.5rem', maxWidth: '600px', width: '100%' }}>
           <div style={{ textAlign: 'center' }}>
             <h2 style={{ color: '#f0f0f5', margin: 0 }}>Register Your Face</h2>
@@ -113,7 +113,7 @@ export default function SignUpPage() {
   }
 
   return (
-    <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', minHeight: '100vh', padding: '2rem' }}>
+    <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', minHeight: '100vh', padding: '1rem' }}>
       <div className={styles.card}>
         <h1 className={styles.title}>Create account</h1>
         <p className={styles.subtitle}>Step 1 of 2 — your details</p>

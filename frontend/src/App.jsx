@@ -1,5 +1,6 @@
 import { Routes, Route, Navigate } from 'react-router-dom';
 import { useAuth } from './hooks/useAuth';
+import LandingPage from './pages/LandingPage';
 import SignUpPage from './pages/SignUpPage';
 import SignInPage from './pages/SignInPage';
 import FaceLoginPage from './pages/FaceLoginPage';
@@ -29,12 +30,12 @@ function GuestRoute({ children }) {
 export default function App() {
   return (
     <Routes>
-      <Route path="/" element={<Navigate to="/signin" replace />} />
+      <Route path="/" element={<LandingPage />} />
       <Route path="/signup" element={<GuestRoute><SignUpPage /></GuestRoute>} />
       <Route path="/signin" element={<GuestRoute><SignInPage /></GuestRoute>} />
       <Route path="/face-login" element={<GuestRoute><FaceLoginPage /></GuestRoute>} />
       <Route path="/dashboard" element={<ProtectedRoute><DashboardPage /></ProtectedRoute>} />
-      <Route path="*" element={<Navigate to="/signin" replace />} />
+      <Route path="*" element={<Navigate to="/" replace />} />
     </Routes>
   );
 }

@@ -14,3 +14,7 @@ services:
         generateValue: true
       - key: JWT_REFRESH_SECRET
         generateValue: true
+      - key: TURSO_DATABASE_URL
+        value: libsql://faceauth-db-maneshwars.aws-ap-south-1.turso.io
+      - key: TURSO_AUTH_TOKEN
+        sync: false

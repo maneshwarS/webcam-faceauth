@@ -47,15 +47,15 @@ app.use('/api/face', faceRoutes);
 app.get('/api/health', (req, res) => res.json({ status: 'ok' }));
 
 // Admin: list registered users (protected by a secret query param)
-app.get('/api/admin/users', (req, res) => {
+app.get('/api/admin/users', async (req, res) => {
   if (req.query.key !== process.env.JWT_SECRET) {
     return res.status(403).json({ error: 'Forbidden' });
   }
   const { getDb } = require('./db/database');
-  const users = getDb().prepare(
+  const result = await getDb().execute(
     'SELECT id, name, email, face_registered_at, created_at FROM users'
-  ).all();
-  res.json({ count: users.length, users });
+  );
+  res.json({ count: result.rows.length, users: result.rows });
 });
 
 // In production, serve the built React frontend from backend
@@ -77,6 +77,15 @@ app.use((err, req, res, next) => {
   res.status(500).json({ error: 'Internal server error' });
 });
 
-app.listen(PORT, () => {
-  console.log(`Backend running on http://localhost:${PORT}`);
-});
+// Initialize database schema, then start server
+const { initSchema } = require('./db/database');
+initSchema()
+  .then(() => {
+    app.listen(PORT, () => {
+      console.log(`Backend running on http://localhost:${PORT}`);
+    });
+  })
+  .catch((err) => {
+    console.error('Failed to initialize database:', err);
+    process.exit(1);
+  });

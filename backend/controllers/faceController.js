@@ -18,20 +18,21 @@ function setRefreshCookie(res, token, rememberDevice) {
  * Requires: Bearer access token (from signup)
  * Body: { descriptor: number[128] }
  */
-function registerFace(req, res) {
+async function registerFace(req, res) {
   const { userId } = req.user;
   const { descriptor } = req.body;
 
   const db = getDb();
-  const user = db.prepare('SELECT id FROM users WHERE id = ?').get(userId);
-  if (!user) {
+  const result = await db.execute({ sql: 'SELECT id FROM users WHERE id = ?', args: [userId] });
+  if (result.rows.length === 0) {
     return res.status(404).json({ error: 'User not found' });
   }
 
   const descriptorJson = JSON.stringify(descriptor);
-  db.prepare(
-    "UPDATE users SET face_descriptor = ?, face_registered_at = datetime('now') WHERE id = ?"
-  ).run(descriptorJson, userId);
+  await db.execute({
+    sql: "UPDATE users SET face_descriptor = ?, face_registered_at = datetime('now') WHERE id = ?",
+    args: [descriptorJson, userId],
+  });
 
   return res.json({ success: true, message: 'Face registered successfully' });
 }
@@ -42,12 +43,13 @@ function registerFace(req, res) {
  * Body: { descriptor: number[128] }
  * Completes 2FA and issues full tokens
  */
-function verifyFace(req, res) {
+async function verifyFace(req, res) {
   const { userId, rememberDevice } = req.user;
   const { descriptor } = req.body;
 
   const db = getDb();
-  const user = db.prepare('SELECT id, name, email, face_descriptor FROM users WHERE id = ?').get(userId);
+  const result = await db.execute({ sql: 'SELECT id, name, email, face_descriptor FROM users WHERE id = ?', args: [userId] });
+  const user = result.rows[0];
   if (!user || !user.face_descriptor) {
     return res.status(400).json({ error: 'No face registered for this user' });
   }
@@ -64,20 +66,21 @@ function verifyFace(req, res) {
     return res.status(401).json({ error: 'Face verification failed', distance });
   }
 
-  const accessToken = issueAccessToken({ userId: user.id, email: user.email });
-  const refreshToken = issueRefreshToken({ userId: user.id }, rememberDevice);
+  const accessToken = issueAccessToken({ userId: Number(user.id), email: user.email });
+  const refreshToken = issueRefreshToken({ userId: Number(user.id) }, rememberDevice);
   const expiry = getRefreshExpiry(rememberDevice);
   const tokenHash = hashToken(refreshToken);
   const deviceHint = req.headers['user-agent'] ? hashToken(req.headers['user-agent']).slice(0, 16) : null;
 
-  db.prepare(
-    'INSERT INTO refresh_tokens (user_id, token_hash, expires_at, device_hint) VALUES (?, ?, ?, ?)'
-  ).run(user.id, tokenHash, expiry.toISOString(), deviceHint);
+  await db.execute({
+    sql: 'INSERT INTO refresh_tokens (user_id, token_hash, expires_at, device_hint) VALUES (?, ?, ?, ?)',
+    args: [Number(user.id), tokenHash, expiry.toISOString(), deviceHint],
+  });
 
   setRefreshCookie(res, refreshToken, rememberDevice);
   return res.json({
     accessToken,
-    user: { id: user.id, name: user.name, email: user.email },
+    user: { id: Number(user.id), name: user.name, email: user.email },
   });
 }
 
@@ -86,11 +89,12 @@ function verifyFace(req, res) {
  * No auth required — identifies user by face
  * Body: { descriptor: number[128], rememberDevice?: bool }
  */
-function faceLogin(req, res) {
+async function faceLogin(req, res) {
   const { descriptor, rememberDevice } = req.body;
 
   const db = getDb();
-  const users = db.prepare('SELECT id, name, email, face_descriptor FROM users WHERE face_descriptor IS NOT NULL').all();
+  const result = await db.execute('SELECT id, name, email, face_descriptor FROM users WHERE face_descriptor IS NOT NULL');
+  const users = result.rows;
 
   if (users.length === 0) {
     return res.status(401).json({ matched: false, error: 'No registered faces found' });
@@ -101,21 +105,22 @@ function faceLogin(req, res) {
     return res.status(401).json({ matched: false, error: 'Face not recognized', distance });
   }
 
-  const accessToken = issueAccessToken({ userId: user.id, email: user.email });
-  const refreshToken = issueRefreshToken({ userId: user.id }, rememberDevice);
+  const accessToken = issueAccessToken({ userId: Number(user.id), email: user.email });
+  const refreshToken = issueRefreshToken({ userId: Number(user.id) }, rememberDevice);
   const expiry = getRefreshExpiry(rememberDevice);
   const tokenHash = hashToken(refreshToken);
   const deviceHint = req.headers['user-agent'] ? hashToken(req.headers['user-agent']).slice(0, 16) : null;
 
-  db.prepare(
-    'INSERT INTO refresh_tokens (user_id, token_hash, expires_at, device_hint) VALUES (?, ?, ?, ?)'
-  ).run(user.id, tokenHash, expiry.toISOString(), deviceHint);
+  await db.execute({
+    sql: 'INSERT INTO refresh_tokens (user_id, token_hash, expires_at, device_hint) VALUES (?, ?, ?, ?)',
+    args: [Number(user.id), tokenHash, expiry.toISOString(), deviceHint],
+  });
 
   setRefreshCookie(res, refreshToken, rememberDevice);
   return res.json({
     matched: true,
     accessToken,
-    user: { id: user.id, name: user.name, email: user.email },
+    user: { id: Number(user.id), name: user.name, email: user.email },
   });
 }
 

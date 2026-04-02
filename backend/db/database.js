@@ -1,24 +1,30 @@
-const Database = require('better-sqlite3');
-const path = require('path');
+const { createClient } = require('@libsql/client');
 require('dotenv').config();
-
-const DB_PATH = process.env.DB_PATH || './db/faceid.db';
-const dbPath = path.resolve(__dirname, '..', DB_PATH.replace('./', ''));
 
 let db;
 
 function getDb() {
   if (!db) {
-    db = new Database(dbPath);
-    db.pragma('journal_mode = WAL');
-    db.pragma('foreign_keys = ON');
-    initSchema();
+    const url = process.env.TURSO_DATABASE_URL;
+    const authToken = process.env.TURSO_AUTH_TOKEN;
+
+    if (url) {
+      // Production: connect to Turso cloud
+      db = createClient({ url, authToken });
+    } else {
+      // Local dev: use local SQLite file
+      const path = require('path');
+      const DB_PATH = process.env.DB_PATH || './db/faceid.db';
+      const dbPath = 'file:' + path.resolve(__dirname, '..', DB_PATH.replace('./', ''));
+      db = createClient({ url: dbPath });
+    }
   }
   return db;
 }
 
-function initSchema() {
-  db.exec(`
+async function initSchema() {
+  const db = getDb();
+  await db.execute(`
     CREATE TABLE IF NOT EXISTS users (
       id                  INTEGER PRIMARY KEY AUTOINCREMENT,
       name                TEXT NOT NULL,
@@ -27,8 +33,9 @@ function initSchema() {
       face_descriptor     TEXT,
       face_registered_at  TEXT,
       created_at          TEXT DEFAULT (datetime('now'))
-    );
-
+    )
+  `);
+  await db.execute(`
     CREATE TABLE IF NOT EXISTS refresh_tokens (
       id          INTEGER PRIMARY KEY AUTOINCREMENT,
       user_id     INTEGER NOT NULL,
@@ -36,8 +43,8 @@ function initSchema() {
       expires_at  TEXT NOT NULL,
       device_hint TEXT,
       FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE
-    );
+    )
   `);
 }
 
-module.exports = { getDb };
+module.exports = { getDb, initSchema };
